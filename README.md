@@ -182,6 +182,35 @@ The Planner generates an actionable plan to open the 'Recently Closed Tabs' page
 | 15 | https://github.com/AntennaPod/AntennaPod/issues/7371 |
 | 16 | https://github.com/AntennaPod/AntennaPod/issues/7373 |
 
+### **Bugs Identified in: AmazeFileManager Formative Study**
+
+| No. | Bug ID |
+|----------|----------|
+| 1 | https://github.com/TeamAmaze/AmazeFileManager/issues/4307 |
+| 2 | https://github.com/TeamAmaze/AmazeFileManager/issues/4299 |
+| 3 | https://github.com/TeamAmaze/AmazeFileManager/issues/4308 |
+| 4 | https://github.com/TeamAmaze/AmazeFileManager/issues/4300 |
+| 5 | https://github.com/TeamAmaze/AmazeFileManager/issues/4323 |
+| 6 | https://github.com/TeamAmaze/AmazeFileManager/issues/4324 |
+| 7 | https://github.com/TeamAmaze/AmazeFileManager/issues/4325 |
+| 8 | https://github.com/TeamAmaze/AmazeFileManager/issues/4333 |
+| 9 | https://github.com/TeamAmaze/AmazeFileManager/issues/4301 |
+| 10 | https://github.com/TeamAmaze/AmazeFileManager/issues/4334 |
+| 11 | https://github.com/TeamAmaze/AmazeFileManager/issues/4335 |
+| 12 | https://github.com/TeamAmaze/AmazeFileManager/issues/4336 |
+| 13 | https://github.com/TeamAmaze/AmazeFileManager/issues/4337 |
+| 14 | https://github.com/TeamAmaze/AmazeFileManager/issues/4338 |
+| 15 | https://github.com/TeamAmaze/AmazeFileManager/issues/4339 |
+| 16 | https://github.com/TeamAmaze/AmazeFileManager/issues/4304 |
+| 17 | https://github.com/TeamAmaze/AmazeFileManager/issues/4305 |
+| 18 | https://github.com/TeamAmaze/AmazeFileManager/issues/4306 |
+| 19 | https://github.com/TeamAmaze/AmazeFileManager/issues/4327 |
+| 20 | https://github.com/TeamAmaze/AmazeFileManager/issues/4329 |
+| 21 | https://github.com/TeamAmaze/AmazeFileManager/issues/4328 |
+| 22 | https://github.com/TeamAmaze/AmazeFileManager/issues/4340 |
+| 23 | https://github.com/TeamAmaze/AmazeFileManager/issues/4341 |
+
+
 ### **Bugs Identified in: Firefox Automated Soap Opera Testing**
 
 | No. | Bug ID |
@@ -231,6 +260,21 @@ The Planner generates an actionable plan to open the 'Recently Closed Tabs' page
 | 9 | https://github.com/AntennaPod/AntennaPod/issues/7369 |
 | 10 | https://github.com/AntennaPod/AntennaPod/issues/7372 |
 
+### **Bugs Identified in: AmazeFileManager Automated Soap Opera Testing**
+
+| No. | Bug ID |
+|----------|----------|
+| 1 | https://github.com/TeamAmaze/AmazeFileManager/issues/4312 |
+| 2 | https://github.com/TeamAmaze/AmazeFileManager/issues/4313 |
+| 3 | https://github.com/TeamAmaze/AmazeFileManager/issues/4309 |
+| 4 | https://github.com/TeamAmaze/AmazeFileManager/issues/4310 |
+| 5 | https://github.com/TeamAmaze/AmazeFileManager/issues/4300 |
+| 6 | https://github.com/TeamAmaze/AmazeFileManager/issues/4325 |
+| 7 | https://github.com/TeamAmaze/AmazeFileManager/issues/4332 |
+| 8 | https://github.com/TeamAmaze/AmazeFileManager/issues/4301 |
+| 9 | https://github.com/TeamAmaze/AmazeFileManager/issues/4305 |
+| 10 | https://github.com/TeamAmaze/AmazeFileManager/issues/4326 |
+
 ### **Bugs Identified in: Human-AI Co-learning**
 
 | No. | Bug ID |
@@ -251,6 +295,7 @@ The Planner generates an actionable plan to open the 'Recently Closed Tabs' page
 | 14 | https://github.com/wordpress-mobile/WordPress-Android/issues/21137 |
 | 15 | https://github.com/AntennaPod/AntennaPod/issues/7354 |
 | 16 | https://github.com/AntennaPod/AntennaPod/issues/7356 |
+| 17 | https://github.com/TeamAmaze/AmazeFileManager/issues/4326 |
 
 ### **Bugs Identified in: Others**
 

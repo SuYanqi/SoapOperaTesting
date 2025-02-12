@@ -1,12 +1,18 @@
 from bug_automating.types.bug import Bugs
 from bug_automating.utils.file_util import FileUtil
 from bug_automating.utils.path_util import PathUtil
-from config import TO_DICT_OMIT_ATTRIBUTES, APP_NAME_WORDPRESS
+from config import TO_DICT_OMIT_ATTRIBUTES, APP_NAME_WORDPRESS, APP_NAME_AMAZE, APP_NAME_DUCKGO, APP_NAME_MARKOR, \
+    APP_NAME_MATERIALFILES, APP_NAME_NEWPIPE
 
 if __name__ == "__main__":
     # app = "firefox"
     # app = 'antennapod'
-    app = APP_NAME_WORDPRESS
+    # app = APP_NAME_WORDPRESS
+    # app = APP_NAME_AMAZE
+    # app = APP_NAME_DUCKGO
+    # app = APP_NAME_MARKOR
+    # app = APP_NAME_MATERIALFILES
+    app = APP_NAME_NEWPIPE
 
     # test_flag = True
     test_flag = False

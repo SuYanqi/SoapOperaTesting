@@ -29,6 +29,7 @@ class Placeholder:
     VERIFIER_OUTPUT = 'VERIFIER_OUTPUT'
 
     COST = 'COST'
+    TOTAL_COST = 'total_cost'
 
     SUB_STEP = 'SUB_STEP'
     SUB_STEPS = 'SUB_STEPS'
@@ -714,6 +715,11 @@ This is because the search-only view is expecting highlights to be off, but that
                 },
             ]
     }
+    # TAGGER_OUTPUT = 'TAGGER_OUTPUT'
+    TAG_NO = 'TAG_NO'
+    TAGGER_FORMAT = {
+        TAG_NO: '',
+    }
 
     VALID_ISSUES = "VALID_ISSUES"
     INVALID_ISSUES = "INVALID_ISSUES"
@@ -728,6 +734,31 @@ This is because the search-only view is expecting highlights to be off, but that
 
     TYPE_ENHANCEMENT = 'ENHANCEMENT'
     TYPE_DEFECT = 'DEFECT'
+
+    TYPE_SYMPTOM = 'TYPE_SYMPTOM'
+    TYPE_SYMPTOM_MANUALLY = 'TYPE_SYMPTOM_MANUALLY'
+    # Problems with the appearance, layout, or usability of the user interface.
+    # Examples: Misaligned buttons, unreadable text, incorrect colors, or broken responsiveness
+    TYPE_SYMPTOM_UI = 'UI'
+    # Issues where a feature doesn't work as intended or produces incorrect results.
+    # Examples: Broken login functionality, incorrect calculations, or features not behaving as described in the requirements.
+    TYPE_SYMPTOM_FUNCTIONILITY = 'FUNCTIONILITY'
+    # Problems related to system speed, efficiency, or responsiveness.
+    # Examples: Slow loading times, memory leaks, or inefficiencies under load.
+    TYPE_SYMPTOM_PERFORMANCE = 'PERFORMANCE'
+    # Bugs that cause the application to crash or stop working abruptly.
+    # Examples: Unhandled exceptions, segmentation faults, or application hangs.
+    TYPE_SYMPTOM_CRASH = 'CRASH'
+    # Bugs that make the system difficult to use for people with disabilities.
+    # Examples: Missing alt text for images, no keyboard navigation, or poor screen reader support.
+    TYPE_SYMPTOM_ACCESSIBILITY = 'ACCESSIBILITY'
+    # Problems occurring in specific environments, browsers, or devices.
+    # Examples: A web app working on Chrome but not on Firefox or Safari.
+    TYPE_SYMPTOM_COMPATIBILITY = 'COMPATIBILITY'
+    # Bugs that expose the system to unauthorized access or data breaches.
+    # Examples: SQL injection, XSS attacks, or weak authentication mechanisms.
+    TYPE_SYMPTOM_SECURITY = 'SECURITY'
+    TYPE_SYMPTOM_OTHERS = 'OTHERS'
 
     BUG_VALIDITY = 'VALIDITY'
     VALID = 'VALID'

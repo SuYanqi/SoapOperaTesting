@@ -75,6 +75,13 @@ TO_DICT_OMIT_ATTRIBUTES = {"prev_step", "next_step", "bug",
 APP_NAME_FIREFOX = "firefox"
 APP_NAME_ANTENNAPOD = 'antennapod'
 APP_NAME_WORDPRESS = "jetpack"
+APP_NAME_AMAZE = "amaze"
+APP_NAME_THUNDERBIRD = "thunderbird"
+
+APP_NAME_MARKOR = "markor"
+APP_NAME_NEWPIPE = "newpipe"
+APP_NAME_DUCKGO = "duckduckgo"
+APP_NAME_MATERIALFILES = "materialfiles"
 
 BUG_LINK_ANTENNAPOD = 'https://github.com/AntennaPod/AntennaPod/issues/'
 

@@ -80,6 +80,46 @@ class Planner:
         )
         return question
 
+    # def ask_assistant(self, steps, with_img_filepath=None, with_instances=True,
+    #                   app='Fenix', assistant_id=None, thread_id=None):
+    #     if self.assistant is None:
+    #         self.initiate_planner(assistant_id, thread_id, app)
+    #     question = self.question(steps)
+    #     print(question)
+    #     messages = LLMUtil.get_assistant_messages(question, with_img_filepath, with_instances)
+    #     # Create a thread and attach the file to the message
+    #
+    #     self.thread = LLMUtil.client.beta.threads.create(
+    #         # thread_id=self.thread.id,
+    #         # role="user",
+    #         messages=messages
+    #     )
+    #     print(f"thread id: {self.thread.id}")
+    #     run = LLMUtil.client.beta.threads.runs.create_and_poll(
+    #         thread_id=self.thread.id,
+    #         assistant_id=self.assistant.id,
+    #     )
+    #
+    #     messages = list(LLMUtil.client.beta.threads.messages.list(
+    #         thread_id=self.thread.id,
+    #         run_id=run.id))
+    #     print(messages)
+    #
+    #     message_content = messages[0].content[0].text
+    #     annotations = message_content.annotations
+    #     citations = []
+    #     for index, annotation in enumerate(annotations):
+    #         message_content.value = message_content.value.replace(annotation.text, f"[{index}]")
+    #         if file_citation := getattr(annotation, "file_citation", None):
+    #             cited_file = LLMUtil.client.files.retrieve(file_citation.file_id)
+    #             citations.append(f"[{index}] {cited_file.filename}")
+    #
+    #     # print(message_content.value)
+    #     # print("\n".join(citations))
+    #     # planner_output = self.add_image_filepath_into_output(with_img_filepath, message_content.value)
+    #     planner_output = message_content.value
+    #     return planner_output
+
     def ask_assistant(self, steps, with_img_filepath=None, with_cots=True, with_instances=True,
                       app=APP_NAME_FIREFOX, assistant_id=LLMUtil.FENIX_PLANNER_ASSISTANT_ID,
                       vector_store_id=LLMUtil.FENIX_TEST_SCENARIO_VECTOR_STORE_ID, thread_id=None):
@@ -117,9 +157,9 @@ class Planner:
         citations = []
         for index, annotation in enumerate(annotations):
             message_content.value = message_content.value.replace(annotation.text, f"[{index}]")
-            if file_citation := getattr(annotation, "file_citation", None):
-                cited_file = LLMUtil.client.files.retrieve(file_citation.file_id)
-                citations.append(f"[{index}] {cited_file.save_filename}")
+            # if file_citation := getattr(annotation, "file_citation", None):
+            #     cited_file = LLMUtil.client.files.retrieve(file_citation.file_id)
+            #     citations.append(f"[{index}] {cited_file.save_filename}")
 
         # print(message_content.value)
         # print("\n".join(citations))

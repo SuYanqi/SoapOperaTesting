@@ -13,7 +13,8 @@ if __name__ == "__main__":
 
     # # Replace with your GitHub personal access token
     # github_token = "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"
-    github_token = "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"  # mobile
+    # github_token = "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"  # mobile
+    github_token = "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"
 
     headers = {
         'Authorization': f'token {github_token}',
@@ -23,10 +24,10 @@ if __name__ == "__main__":
     folder_name = "issues_pulls"
 
     # GitHub repository information
-    owner = 'wordpress-mobile'
-    repo = 'WordPress-Android'
-    max_issue_id = 21128
-    min_issue_id = 21052
+    # owner = 'wordpress-mobile'
+    # repo = 'WordPress-Android'
+    # max_issue_id = 21128
+    # min_issue_id = 21052
 
     # owner = 'mozilla-mobile'
     # repo = 'fenix'
@@ -46,8 +47,44 @@ if __name__ == "__main__":
     # max_issue_id = 7340
     # min_issue_id = 1
 
+    # # AmazeFileManager
+    # owner = 'TeamAmaze'
+    # repo = 'AmazeFileManager'
+    # max_issue_id = 4284
+    # min_issue_id = 1
+
+    # # Thunderbird
+    # owner = 'thunderbird'
+    # repo = 'thunderbird-android'
+    # max_issue_id = 8781
+    # min_issue_id = 8014
+
+    # # Markor
+    # owner = 'gsantner'
+    # repo = 'markor'
+    # max_issue_id = 2518
+    # min_issue_id = 1
+
+    # # duckduckgo
+    # owner = 'duckduckgo'
+    # repo = 'Android'
+    # max_issue_id = 5326
+    # min_issue_id = 1
+
+    # NewPipe
+    # owner = 'TeamNewPipe'
+    # repo = 'NewPipe'
+    # max_issue_id = 12006
+    # min_issue_id = 1
+
+    owner = 'zhanghai'
+    repo = 'MaterialFiles'
+    max_issue_id = 1385
+    min_issue_id = 1
+
     filepath = Path(DATA_DIR, repo, folder_name)
     # filepath = Path(DATA_DIR, 'github', repo, 'issues')
+    # filepath = Path('/data2', 'yanqisu', 'github', repo, 'issues_pull_requests')
     # Check if the folder exists
     if not os.path.exists(filepath):
         # If it doesn't exist, create it

@@ -7,10 +7,23 @@ from bug_automating.pipelines.evaluator import Deduplicator
 from bug_automating.pipelines.placeholder import Placeholder
 from bug_automating.utils.file_util import FileUtil
 from bug_automating.utils.llm_util import LLMUtil
-from config import DATA_DIR, APP_NAME_WORDPRESS, APP_NAME_FIREFOX, APP_NAME_ANTENNAPOD, OUTPUT_DIR
+from config import DATA_DIR, APP_NAME_WORDPRESS, APP_NAME_FIREFOX, APP_NAME_ANTENNAPOD, OUTPUT_DIR, APP_NAME_AMAZE
 
 if __name__ == "__main__":
-    app_names = [APP_NAME_FIREFOX, APP_NAME_WORDPRESS, APP_NAME_ANTENNAPOD]
+    app_names = [APP_NAME_FIREFOX,
+                 APP_NAME_WORDPRESS,
+                 APP_NAME_ANTENNAPOD,
+                 # APP_NAME_AMAZE
+                 ]
+
+    # 4 catefories
+    # LLMs Hallucination: False UI Design Bugs (Hallucination) and Unexecuted execution plan
+    # Screenshot-based GUI Presentation: Response delay or incomplete loading and Dynamic changes not captured
+    # Error GUI Element Location
+    # Unreasonable or Unnecessary Improvement Suggestions:
+    #           Misunderstood or overlooked,
+    #           Unreasonable or unnecessary,
+    #           Oracle from creative thinking
 
     invalid_reason_count_dict = {}
     invalid_number = 0

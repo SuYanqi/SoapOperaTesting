@@ -96,7 +96,7 @@ class StepSplitter:
         #                        QA(self.summary_question, summary_answer),
         #                        QA(self.desc_question, desc_answer))
 
-        return answer, messages
+        return answer, messages, cost
 
 
 class SecSplitter:
@@ -159,7 +159,7 @@ class SecSplitter:
         messages = LLMUtil.add_role_content_dict_into_messages(LLMUtil.ROLE_USER, question, messages)
         # print(self.summary_question)
         # input()
-        answer, _ = LLMUtil.ask_llm_for_chat_completions(messages, model)
+        answer, total_cost = LLMUtil.ask_llm_for_chat_completions(messages, model)
         messages = LLMUtil.add_role_content_dict_into_messages(LLMUtil.ROLE_ASSISTANT, answer, messages)
 
         # LLMUtil.show_messages(messages)
@@ -169,7 +169,7 @@ class SecSplitter:
         #                        QA(self.summary_question, summary_answer),
         #                        QA(self.desc_question, desc_answer))
 
-        return answer, messages
+        return answer, messages, total_cost
 
     @staticmethod
     def get_messages_list_for_bugs(bugs, with_instances=False):
@@ -192,21 +192,93 @@ class SecSplitter:
         return messages_list
 
 
+# class StepCluster:
+#     @staticmethod
+#     def merge_steps_by_fast_clustering_and_gpt(step_text_list, model="text-embedding-3-large"):
+#         """
+#         https://www.sbert.net/examples/applications/clustering/README.html
+#         Fast Clustering
+#         ** cannot be an empty string for openai embedding **
+#         merge steps:
+#         # 1. Merge steps by concepts (if concepts_in_target and action_object)
+#         2. Merge steps by fast clustering
+#         3. Get self.step_index_cluster_dict and assign index for Step.cluster_index
+#
+#         @param model: SBERT
+#         @type model: sentence embedding
+#         @return: self.step_index_cluster_dict, Step.cluster_index
+#         @rtype: dict{ key: index, value: cluster ((set(step(object), step(object), ...))}), int (index)
+#         """
+#         clusters = list()
+#         # step_list, step_text_list = self.get_steps()
+#         logging.warning("Cluster steps by Fast Clustering...")
+#         step_index_set = set()
+#         # # (score, i, j) list
+#         # step_embeddings = model.encode(step_text_list, batch_size=SBERT_BATCH_SIZE, show_progress_bar=True,
+#         #                                convert_to_tensor=True)
+#         # # step_embeddings = FileUtil.load_pickle(Path(DATA_DIR, 'step_embeddings.json'))
+#         # # FileUtil.dump_pickle(Path(DATA_DIR, 'step_embeddings.json'), step_embeddings)
+#         # step_embeddings = step_embeddings.to('cpu')
+#         step_embeddings = []
+#         logging.warning("Step embedding...")
+#         chuck_size = 2000
+#         if len(step_text_list) > chuck_size:
+#             texts_list = ListUtil.list_of_groups(step_text_list, chuck_size)
+#         else:
+#             texts_list = [step_text_list]
+#         for temp_texts in tqdm(texts_list, ascii=True):
+#             print(temp_texts)
+#             print("*********************************")
+#             response = LLMUtil.client.embeddings.create(input=temp_texts, model=model).data
+#             temp_embeddings = []
+#             for one_embedding in response:
+#                 temp_embeddings.append(one_embedding.embedding)
+#             # return embeddings
+#             # temp_embeddings = LLMUtil.ask_llm_for_embedding(temp_texts, model)
+#             step_embeddings.extend(temp_embeddings)
+#
+#         index_clusters = util.community_detection(step_embeddings, threshold=STEP_MERGE_THRESHOLD, min_community_size=1)
+#
+#         for index_cluster in tqdm(index_clusters, ascii=True):
+#             cluster = set()
+#             for index in index_cluster:
+#                 cluster.add(step_text_list[index])
+#                 step_index_set.add(index)
+#             clusters.append(cluster)
+#
+#         logging.warning("Merging the rest steps...")
+#         for index, step in tqdm(enumerate(step_text_list), ascii=True):
+#             if index not in step_index_set:
+#                 cluster = set()
+#                 cluster.add(step)
+#                 clusters.append(cluster)
+#
+#         index_cluster_dict = dict()
+#         for index, cluster in tqdm(enumerate(clusters), ascii=True):
+#             index_cluster_dict[index] = index_cluster_dict.get(index, cluster)
+#             for step in cluster:
+#                 step.cluster_index = index
+#
+#         self.step_index_cluster_dict = index_cluster_dict
+
+
 class StepClusterer:
     def __init__(self):
         pass
 
     @staticmethod
-    def cluster_texts_by_fast_clustering(texts, model=LLMUtil.TEXT_EMBEDDING_MODEL_NAME):
+    def cluster_texts_by_fast_clustering(texts, model=LLMUtil.TEXT_EMBEDDING_3_LARGE_MODEL_NAME):
         embeddings = []
+        total_cost = 0
         logging.warning("Step embedding...")
         if len(texts) > SYNC_EMBEDDING_NUM:
             texts_list = ListUtil.list_of_groups(texts, SYNC_EMBEDDING_NUM)
         else:
             texts_list = [texts]
         for temp_texts in tqdm(texts_list, ascii=True):
-            temp_embeddings = LLMUtil.ask_llm_for_embedding(temp_texts, model)
+            temp_embeddings, cost = LLMUtil.ask_llm_for_embedding(temp_texts, model)
             embeddings.extend(temp_embeddings)
+            total_cost = total_cost + cost
 
         # Two parameters to tune:
         # min_cluster_size: Only consider cluster that have at least 25 elements
@@ -231,7 +303,7 @@ class StepClusterer:
                 cluster = set()
                 cluster.add(step)
                 clusters.append(cluster)
-        return clusters
+        return clusters, total_cost
 
     @staticmethod
     def split_steps_by_step_type(step_splitter_output):
@@ -285,12 +357,12 @@ class StepClusterer:
         # print(action_steps)
         # print(check_steps)
         # print(f"All steps: {len(steps)}")
-        action_clusters = StepClusterer.cluster_texts_by_fast_clustering(action_steps)
-        check_clusters = StepClusterer.cluster_texts_by_fast_clustering(check_steps)
+        action_clusters, action_clusters_cost = StepClusterer.cluster_texts_by_fast_clustering(action_steps)
+        check_clusters, check_clusters_cost = StepClusterer.cluster_texts_by_fast_clustering(check_steps)
         # print(action_clusters)
         # print(check_clusters)
-
         step_clusterer_output = StepClusterer.get_cluster_index_for_steps(step_splitter_output,
                                                                           action_clusters, check_clusters)
+        cost = action_clusters_cost + check_clusters_cost
 
-        return step_clusterer_output
+        return step_clusterer_output, cost

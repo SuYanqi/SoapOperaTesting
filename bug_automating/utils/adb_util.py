@@ -51,6 +51,7 @@ class ADBUtil:
     @staticmethod
     def find_package_by_keyword(keyword):
         packages = ADBUtil.get_all_packages()
+        # print(packages)
         matching_packages = [pkg for pkg in packages if keyword in pkg]
         return matching_packages
 

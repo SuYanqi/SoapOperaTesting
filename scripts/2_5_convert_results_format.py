@@ -2,7 +2,8 @@ from pathlib import Path
 
 from bug_automating.pipelines.placeholder import Placeholder
 from bug_automating.utils.file_util import FileUtil
-from config import DATA_DIR, APP_NAME_WORDPRESS
+from config import DATA_DIR, APP_NAME_WORDPRESS, APP_NAME_DUCKGO, APP_NAME_AMAZE, APP_NAME_MARKOR, \
+    APP_NAME_MATERIALFILES, APP_NAME_NEWPIPE
 
 
 def convert_result_format(sec_step_result):
@@ -51,8 +52,13 @@ def convert_result_format(sec_step_result):
 
 if __name__ == "__main__":
     # app = 'firefox'
-    app = APP_NAME_WORDPRESS
+    # app = APP_NAME_WORDPRESS
     # app = 'antennapod'
+    # app = APP_NAME_AMAZE
+    # app = APP_NAME_DUCKGO
+    # app = APP_NAME_MARKOR
+    # app = APP_NAME_MATERIALFILES
+    app = APP_NAME_NEWPIPE
     # test_flag = True
     test_flag = False
 

@@ -12,7 +12,8 @@ from bug_automating.pipelines.player import ActionExecutor, TestScenarioPlayer, 
 from bug_automating.pipelines.verifier import Verifier, OracleFinder
 from bug_automating.utils.file_util import FileUtil
 from bug_automating.utils.llm_util import LLMUtil
-from config import OUTPUT_DIR, MAX_EXPLORATORY_COUNT, APP_NAME_FIREFOX, APP_NAME_ANTENNAPOD, APP_NAME_WORDPRESS
+from config import OUTPUT_DIR, MAX_EXPLORATORY_COUNT, APP_NAME_FIREFOX, APP_NAME_ANTENNAPOD, APP_NAME_WORDPRESS, \
+    APP_NAME_AMAZE, APP_NAME_DUCKGO, APP_NAME_MARKOR, APP_NAME_NEWPIPE, APP_NAME_MATERIALFILES
 
 
 class App:
@@ -59,7 +60,11 @@ class App:
         output_list = []
         output_dict = None
         # launch app and return package name
-        package_name = ActionExecutor.launch_app(app_keyword)
+        if app_keyword == APP_NAME_MATERIALFILES:
+            package_name = ActionExecutor.launch_app("android.files")
+        else:
+            package_name = ActionExecutor.launch_app(app_keyword)
+
         time.sleep(6)
         print(package_name)
         sub_dir = 'all'
@@ -92,6 +97,27 @@ class App:
                 vector_store_id = LLMUtil.WORDPRESS_TEST_SCENARIO_VECTOR_STORE_ID
                 planner_assistant_id = LLMUtil.WORDPRESS_PLANNER_ASSISTANT_ID
                 oracle_finder_assistant_id = LLMUtil.WORDPRESS_CLUSTER_IDENTIFIER_ASSISTANT_ID
+            elif app_keyword == APP_NAME_AMAZE:
+                vector_store_id = LLMUtil.AMAZE_TEST_SCENARIO_VECTOR_STORE_ID
+                planner_assistant_id = LLMUtil.AMAZE_PLANNER_ASSISTANT_ID
+                oracle_finder_assistant_id = LLMUtil.AMAZE_CLUSTER_IDENTIFIER_ASSISTANT_ID
+            elif app_keyword == APP_NAME_DUCKGO:
+                vector_store_id = LLMUtil.DUCKGO_TEST_SCENARIO_VECTOR_STORE_ID
+                planner_assistant_id = LLMUtil.DUCKGO_PLANNER_ASSISTANT_ID
+                oracle_finder_assistant_id = LLMUtil.DUCKGO_CLUSTER_IDENTIFIER_ASSISTANT_ID
+            elif app_keyword == APP_NAME_MARKOR:
+                vector_store_id = LLMUtil.MARKOR_TEST_SCENARIO_VECTOR_STORE_ID
+                planner_assistant_id = LLMUtil.MARKOR_PLANNER_ASSISTANT_ID
+                oracle_finder_assistant_id = LLMUtil.MARKOR_CLUSTER_IDENTIFIER_ASSISTANT_ID
+            elif app_keyword == APP_NAME_NEWPIPE:
+                vector_store_id = LLMUtil.NEWPIPE_TEST_SCENARIO_VECTOR_STORE_ID
+                planner_assistant_id = LLMUtil.NEWPIPE_PLANNER_ASSISTANT_ID
+                oracle_finder_assistant_id = LLMUtil.NEWPIPE_CLUSTER_IDENTIFIER_ASSISTANT_ID
+            elif app_keyword == APP_NAME_MATERIALFILES:
+                vector_store_id = LLMUtil.MATERIALFILES_TEST_SCENARIO_VECTOR_STORE_ID
+                planner_assistant_id = LLMUtil.MATERIALFILES_PLANNER_ASSISTANT_ID
+                oracle_finder_assistant_id = LLMUtil.MATERIALFILES_CLUSTER_IDENTIFIER_ASSISTANT_ID
+
             planner_vector_store_id = vector_store_id
             oracle_vector_store_id = vector_store_id
             if not with_knowledge_base:
@@ -218,6 +244,10 @@ class App:
                 print(e)
                 pass
 
+            # @todo check
+            total_cost = App.calculate_cost(output_dict)
+            output_dict[Placeholder.TOTAL_COST] = output_dict.get(Placeholder.TOTAL_COST, total_cost)
+
             FileUtil.dump_json(Path(app_directory, f"{Placeholder.OUTPUT}.json"), output_dict)
             App.create_pdf(output_dict)
         return output_dict
@@ -272,6 +302,32 @@ class App:
             # Save the temporary PDF
             pdf.output(pdf_filepath)
         return pdf_filepath
+
+    @staticmethod
+    def calculate_cost(output_dict):
+        total_cost = 0
+        for output in output_dict[Placeholder.OUTPUT_LIST]:
+            try:
+                oracle_finder_output = output[Placeholder.ORACLE_FINDER_OUTPUT]
+                if oracle_finder_output:
+                    total_cost = total_cost + oracle_finder_output[Placeholder.ORACLE_FINDER_COST][Placeholder.TOTAL_COST] \
+                                 + oracle_finder_output[Placeholder.FORMAT_VERIFIER_COST][Placeholder.TOTAL_COST]
+                verifier_output = output[Placeholder.VERIFIER_OUTPUT]
+                if verifier_output:
+                    total_cost = total_cost + verifier_output[Placeholder.COST][Placeholder.TOTAL_COST]
+                planner_output = output[Placeholder.PLANNER_OUTPUT]
+                if planner_output:
+                    total_cost = total_cost + planner_output[Placeholder.PLANNER_COST][Placeholder.TOTAL_COST] + \
+                                 planner_output[Placeholder.FORMAT_VERIFIER_COST][Placeholder.TOTAL_COST]
+                player_output = output[Placeholder.PLAYER_OUTPUT]
+                if player_output:
+                    total_cost = total_cost + player_output[Placeholder.COST][Placeholder.TOTAL_COST]
+            except Exception as e:
+                print(e)
+                pass
+        return total_cost
+
+
 
     # @staticmethod
     # def process(steps, app_keyword,

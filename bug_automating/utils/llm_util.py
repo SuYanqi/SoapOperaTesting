@@ -13,7 +13,8 @@ from bug_automating.utils.file_util import FileUtil
 
 
 class LLMUtil:
-    OPENAI_API_KEY = "sk-proj-48MJRpOF8Z5pJMjLknGDT3BlbkFJabKkgTSUVUMLEgTmBMEt"
+    # OPENAI_API_KEY = "sk-proj-48MJRpOF8Z5pJMjLknGDT3BlbkFJabKkgTSUVUMLEgTmBMEt"
+    OPENAI_API_KEY = "sk-Lc8nO7JKL8nlnCiboTl4-gnFPUqM1Q-3lmMBSh1au1T3BlbkFJxDmmGmM6q2YuyusmiOVVVKL5zou3GHDT8P8RiwMZoA"
     NO_KNOWLEDGE_BASE_ASSISTANT_ID = "asst_H3veqzbHkGhrmwjuh4ROkb42"
     NO_KNOWLEDGE_BASE_VECTOR_STORE_ID = "vs_ZbQL6MIdSh8CraHiYiXqqVa5"
     FENIX_TEST_SCENARIO_VECTOR_STORE_ID = "vs_3XSIno2IO2tqqa5ZKb86wDKk"
@@ -30,6 +31,25 @@ class LLMUtil:
     WORDPRESS_PLANNER_ASSISTANT_ID = "asst_KFXIFNF0GQXG7pQekw9it4LJ"
     WORDPRESS_CLUSTER_IDENTIFIER_ASSISTANT_ID = "asst_54ZgvRRfCvV0LVZfkDa2X7Jb"
 
+    AMAZE_TEST_SCENARIO_VECTOR_STORE_ID = "vs_DN4tZ4GUeYQ0RW2KaUICkbvt"
+    AMAZE_PLANNER_ASSISTANT_ID = "asst_OZfszE55uNtkjg1RTq9rnMSV"
+    AMAZE_CLUSTER_IDENTIFIER_ASSISTANT_ID = "asst_z8ekorfDB9WLnkLb242jnxzA"
+
+    DUCKGO_TEST_SCENARIO_VECTOR_STORE_ID = "vs_67a5f55125448191a8b7466d10db187c"
+    DUCKGO_PLANNER_ASSISTANT_ID = "asst_tQdzifuBVLpBampMNSyOyd30"
+    DUCKGO_CLUSTER_IDENTIFIER_ASSISTANT_ID = "asst_C9f2hDUfL32utjV2wGYHkrIO"
+
+    MARKOR_TEST_SCENARIO_VECTOR_STORE_ID = "vs_67aa357dd1288191bba172c664de43a1"
+    MARKOR_PLANNER_ASSISTANT_ID = "asst_XfPox6S4Qu0jrBiQ9SkKXHRj"
+    MARKOR_CLUSTER_IDENTIFIER_ASSISTANT_ID = "asst_kK1smPpbtF0P4CAMAM5Mqqzf"
+
+    NEWPIPE_TEST_SCENARIO_VECTOR_STORE_ID = "vs_67ab2ef4cde88191afbc9e672f8a507b"
+    NEWPIPE_PLANNER_ASSISTANT_ID = "asst_raw6wX69FVoTDNF15EUt8ndz"
+    NEWPIPE_CLUSTER_IDENTIFIER_ASSISTANT_ID = "asst_gvH5krqrZ6a9vkIOv5cBfX1S"
+
+    MATERIALFILES_TEST_SCENARIO_VECTOR_STORE_ID = "vs_67ab55c23da88191a543f72ae0416c7e"
+    MATERIALFILES_PLANNER_ASSISTANT_ID = "asst_Vzm5Db9geg1NyILO1rIvf9EM"
+    MATERIALFILES_CLUSTER_IDENTIFIER_ASSISTANT_ID = "asst_fOyDY9Y3dLf0TrVpbnN52EF6"
 
     client = OpenAI(api_key=OPENAI_API_KEY)
     GPT3_5_MODEL_NAME = "gpt-3.5-turbo-1106"
@@ -52,7 +72,8 @@ class LLMUtil:
     GPT4O_MINI_PRICE_PER_PROMPT_TOKEN = 0.15/1_000_000  # $0.15 per 1M prompt tokens (input)
     GPT4O_MINI_PRICE_PER_COMPLETION_TOKEN = 0.6/1_000_000  # $0.6 per 1M completion tokens (output)
 
-    TEXT_EMBEDDING_MODEL_NAME = "text-embedding-3-large"
+    TEXT_EMBEDDING_3_LARGE_MODEL_NAME = "text-embedding-3-large"
+    TEXT_EMBEDDING_3_LARGE_PRICE_PER_TOKEN = 0.13 / 1_000_000  # $0.13 per 1M tokens
 
     ROLE_SYSTEM = 'system'
     ROLE_USER = 'user'
@@ -154,7 +175,7 @@ class LLMUtil:
 
     @staticmethod
     @backoff.on_exception(backoff.expo, openai.RateLimitError)
-    def ask_llm_for_embedding(texts, model=TEXT_EMBEDDING_MODEL_NAME):
+    def ask_llm_for_embedding(texts, model=TEXT_EMBEDDING_3_LARGE_MODEL_NAME):
         """
         # Example texts
         input: texts = ["example text 1", "example text 2"]
@@ -165,10 +186,13 @@ class LLMUtil:
         #     model=model
         # )
         response = LLMUtil.client.embeddings.create(input=texts, model=model).data
+        # total_cost = LLMUtil.calculate_costs(response)
+        # cost = response.usage.total_tokens * LLMUtil.TEXT_EMBEDDING_PRICE_PER_TOKEN
         embeddings = []
         for one_embedding in response:
             embeddings.append(one_embedding.embedding)
-        return embeddings
+        cost = LLMUtil.calculate_costs_for_embedding(texts, model)
+        return embeddings, cost
 
     @staticmethod
     def get_messages(session_prompt, qa_pairs=None):
@@ -453,4 +477,23 @@ class LLMUtil:
             "total_cost": total_cost
         }
         return cost
+
+    @staticmethod
+    def calculate_costs_for_embedding(text_input, model=TEXT_EMBEDDING_3_LARGE_MODEL_NAME):
+        # Initialize the token count
+        tokens_num = 0
+        if model == LLMUtil.TEXT_EMBEDDING_3_LARGE_MODEL_NAME:
+            price_per_token = LLMUtil.TEXT_EMBEDDING_3_LARGE_PRICE_PER_TOKEN
+        # Handle case where input is a list of texts
+        if isinstance(text_input, list):
+            tokens_num = sum(len(text.split()) for text in text_input)
+        # Handle case where input is a single string
+        elif isinstance(text_input, str):
+            tokens_num = len(text_input.split())
+
+        # Calculate and return the total cost
+        return tokens_num * price_per_token
+
+
+
 

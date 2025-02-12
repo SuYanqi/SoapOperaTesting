@@ -11,7 +11,13 @@ if __name__ == "__main__":
     1. convert all bug_dicts into bugs
     """
     # reponame = 'AntennaPod'
-    reponame = 'WordPress-Android'
+    # reponame = 'WordPress-Android'
+    # reponame = 'AmazeFileManager'
+    # reponame = 'Thunderbird'
+    # reponame = 'markor'
+    # reponame = 'newpipe'
+    reponame = 'MaterialFiles'
+    # reponame = 'duckduckgo'
     component = None
     start_index = 0
     end_index = -1

@@ -6,7 +6,8 @@ from pathlib import Path
 
 from bug_automating.pipelines.constructor import StepClusterer
 from bug_automating.utils.file_util import FileUtil
-from config import DATA_DIR, APP_NAME_WORDPRESS
+from config import DATA_DIR, APP_NAME_WORDPRESS, APP_NAME_AMAZE, APP_NAME_DUCKGO, APP_NAME_MARKOR, \
+    APP_NAME_MATERIALFILES, APP_NAME_NEWPIPE
 
 if __name__ == "__main__":
     '''
@@ -31,7 +32,12 @@ if __name__ == "__main__":
 
     # app = "firefox"
     # app = "antennapod"
-    app = APP_NAME_WORDPRESS
+    # app = APP_NAME_WORDPRESS
+    # app = APP_NAME_AMAZE
+    # app = APP_NAME_DUCKGO
+    # app = APP_NAME_MARKOR
+    # app = APP_NAME_MATERIALFILES
+    app = APP_NAME_NEWPIPE
 
     # test_flag = True
     test_flag = False
@@ -44,7 +50,9 @@ if __name__ == "__main__":
         cluster_foldername = f"test_{cluster_foldername}"
     filepath = Path(DATA_DIR, app, f"{section_foldername}_{step_foldername}_results.json")
     step_splitter_output = FileUtil.load_json(filepath)
-    step_clusterer_output = StepClusterer.cluster_steps(step_splitter_output)
+    step_clusterer_output, cost = StepClusterer.cluster_steps(step_splitter_output)
     FileUtil.dump_json(Path(DATA_DIR, app, f"{section_foldername}_{step_foldername}_{cluster_foldername}_results.json"),
                        step_clusterer_output)
+
+    print(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$Cost for embedding by LLMs: {cost}$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 

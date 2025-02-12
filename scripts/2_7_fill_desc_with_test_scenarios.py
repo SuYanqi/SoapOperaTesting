@@ -2,12 +2,18 @@ from pathlib import Path
 
 from bug_automating.utils.file_util import FileUtil
 from bug_automating.utils.path_util import PathUtil
-from config import DATA_DIR, APP_NAME_WORDPRESS
+from config import DATA_DIR, APP_NAME_WORDPRESS, APP_NAME_AMAZE, APP_NAME_DUCKGO, APP_NAME_MARKOR, \
+    APP_NAME_MATERIALFILES, APP_NAME_NEWPIPE
 
 if __name__ == "__main__":
     # app_keyword = "firefox"
     # app_keyword = "antennapod"
-    app_keyword = APP_NAME_WORDPRESS
+    # app_keyword = APP_NAME_WORDPRESS
+    # app_keyword = APP_NAME_AMAZE
+    # app_keyword = APP_NAME_DUCKGO
+    # app_keyword = APP_NAME_MARKOR
+    # app_keyword = APP_NAME_MATERIALFILES
+    app_keyword = APP_NAME_NEWPIPE
 
     # test_flag = True
     test_flag = False

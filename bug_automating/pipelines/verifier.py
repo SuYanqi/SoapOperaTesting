@@ -9,6 +9,151 @@ from bug_automating.pipelines.placeholder import Placeholder
 from bug_automating.utils.img_util import ImageUtil
 from bug_automating.utils.llm_util import LLMUtil
 
+# class Verifier:
+#     def __init__(self):
+#         pass
+#
+#     @staticmethod
+#     def convert_instances_into_qa_pairs(bugs):
+#         # @todo
+#         qa_pairs = []
+#         if Placeholder.SCENARIO_MODIFIER_INSTANCES:
+#             for instance_dict in Placeholder.SCENARIO_MODIFIER_INSTANCES:
+#                 # print(instance_dict['bug_id'])
+#                 bug = bugs.get_bug_by_id(int(instance_dict['bug_id']))
+#                 question = Verifier.question(bug)
+#                 answer = Verifier.answer(instance_dict['output'])
+#                 qa_pairs.append((question, answer))
+#         return qa_pairs
+#
+#     @staticmethod
+#     def get_session_prompt(with_original_gui=True):
+#         introduction = f"I am a verifier capable of: " \
+#                        f"a. if the step is executed correctly given the step and the previous and next GUIs; " \
+#                        f"b. identifying bugs given the steps and their corresponding GUIs. " \
+#                        "Note that there are check items for you to refer to, but please do not restrict to these items. " \
+#                        "Please use creative thinking to find any bugs. " \
+#                        "First, conduct an overall inspection of the GUI to ensure there are no obvious visual issues. " \
+#                        "Then, separately check each component to ensure its layout is reasonable." \
+#                        "Third, check for bugs by analyzing the sequences of images and their corresponding operations."
+#         # "The logical reasoning required to identify bugs involves: " \
+#         # "Static Bugs: Check each image for bugs and identify any that can be detected based on the specific GUI. " \
+#         # "Dynamic Bugs: Check for bugs by analyzing the sequences of images. " \
+#
+#         # introduction = ("I am a helpful element locator capable of identifying and providing the location of elements "
+#         #                 "within a GUI, which helps operating on elements in GUI based on specified steps.")
+#         # Convert the steps into the desired format
+#         # steps = [{f"{Placeholder.STEP_NUM}": i + 1, f"{Placeholder.STEP}": step} for i, step in enumerate(steps)]
+#         # test_scenarios = f"{Placeholder.SCENARIO}: {test_scenario_dict}\n"
+#         # steps = f"{Placeholder.STEPS}: {steps}\n"
+#         # question = "I have explored the above steps on the application. " \
+#         #            "Please detect bugs based on the steps and the corresponding screenshots I have explored. "
+#         # question = "Please detect bugs based on the steps and the corresponding screenshots. "
+#
+#         # notes = "Note that avoid repeating previously attempted ineffective operations. "
+#         json_format_request = f"Please give me the answer in a json format: {Placeholder.VERIFIER_OUTPUT_FORMAT}"
+#
+#         session_prompt = (
+#                 introduction + "\n" +
+#                 # test_scenarios + "\n" +
+#                 # steps + "\n" +
+#                 # actions + "\n" +
+#                 # question + "\n" +
+#                 # notes + "\n" +
+#                 json_format_request
+#         )
+#         if with_original_gui:
+#             session_prompt = session_prompt + "\n" + \
+#                              "The screenshot includes the GUI and GUI with coordinate numbers. " \
+#                              "Please use the GUI for observation and " \
+#                              "the GUI with coordinate numbers for element location and description."
+#
+#         return session_prompt
+#
+#     @staticmethod
+#     def get_initial_messages(with_original_gui=True, with_instances=None):
+#         session_prompt = Verifier.get_session_prompt(with_original_gui)
+#         # print(session_prompt)
+#         qa_pairs = None
+#         if with_instances:
+#             qa_pairs = Verifier.convert_instances_into_qa_pairs(with_instances)
+#         messages = LLMUtil.get_messages(session_prompt, qa_pairs)
+#         return messages
+#
+#     @staticmethod
+#     def get_text_input_from_operation(operation, with_oracles=True):
+#         oracles = []
+#         if with_oracles:
+#             oracles = operation.get(Placeholder.ORACLES, [])
+#         text_input = {
+#             Placeholder.STEP: operation.get(Placeholder.STEP, ''),
+#             Placeholder.ACTION: operation.get(Placeholder.ACTION, ''),
+#             Placeholder.SCROLL_DIRECTION: operation.get(Placeholder.SCROLL_DIRECTION, ''),
+#             Placeholder.ELEMENT_NAME: operation.get(Placeholder.ELEMENT_NAME, ''),
+#             Placeholder.ELEMENT_CATEGORY: operation.get(Placeholder.ELEMENT_CATEGORY, ''),
+#             Placeholder.ELEMENT_NUM: operation.get(Placeholder.ELEMENT_NUM, ''),
+#             Placeholder.ELEMENT_INPUT: operation.get(Placeholder.ELEMENT_INPUT, ''),
+#             Placeholder.ORACLES: oracles,
+#         }
+#         return text_input
+#
+#     @staticmethod
+#     def question(sub_step=None, base64_image_with_nums=None, base64_image=None, with_oracles=True, img_detail="high"):
+#         question = []
+#         # for screenshot_operation_dict in screenshot_operation_list:
+#
+#         image_base64_list = [base64_image, base64_image_with_nums]
+#
+#         for image_base64 in image_base64_list:
+#             if image_base64:
+#                 image_input = LLMUtil.IMAGE_BASE64_INPUT.format(base64_image=image_base64,
+#                                                                 img_detail=img_detail)
+#                 image_input = json.loads(image_input)
+#                 question.append(image_input)
+#         if sub_step:
+#             text_input = ""
+#             operation = Verifier.get_text_input_from_operation(sub_step, with_oracles)
+#             operation = json.dumps(operation)
+#             text_input = text_input + operation
+#             # print(text_input)
+#             text_input = json.dumps(text_input)
+#             if text_input:
+#                 text_input = LLMUtil.TEXT_INPUT.format(text_value=text_input)
+#                 # print(text_input)
+#                 # text_input = json.dumps(text_input)
+#                 text_input = json.loads(text_input)
+#                 # print(text_input)
+#                 question.append(text_input)
+#         question = json.dumps(question)
+#         return json.loads(question)
+#
+#     @staticmethod
+#     def answer(outputs):
+#         return json.loads(outputs)
+#
+#     @staticmethod
+#     def verify(sub_step=None, base64_image_with_nums=None, base64_image=None,
+#                # with_original_gui=True,
+#                with_oracles=True, with_instances=None, messages=None):
+#         if messages is None:
+#             messages = Verifier.get_initial_messages(base64_image, with_instances)
+#         # print(messages)
+#
+#         # extract summary
+#         question = Verifier.question(sub_step, base64_image_with_nums, base64_image, with_oracles)
+#         messages = LLMUtil.add_role_content_dict_into_messages(LLMUtil.ROLE_USER, question, messages)
+#         # print(self.summary_question)
+#         # input()
+#         answer = LLMUtil.ask_llm_for_chat_completions(messages)
+#         answer_dict = Verifier.answer(answer)
+#         messages = LLMUtil.add_role_content_dict_into_messages(LLMUtil.ROLE_ASSISTANT, answer_dict, messages)
+#
+#         # LLMUtil.show_messages(messages)
+#         # question = LLMUtil.get_question_without_image_encode(question)
+#         # print(question)
+#         # print(answer)
+#         # messages = LLMUtil.get_messages_without_image_encode(messages)
+#         return answer_dict, messages
 from config import DATA_DIR, APP_NAME_FIREFOX
 
 
@@ -39,7 +184,23 @@ class OracleFinder:
                 f"Double-check the matching between the {Placeholder.CLUSTER_INDEX} and {Placeholder.REPRESENTATIVE_STEPS}.\n"
                 f"If no {Placeholder.CLUSTER_INDEXES} are identified, return None."
             )
-
+            # f"namely: " \
+            # f"a. Action Consistency: The action performed should be the same across the steps. " \
+            # f"b. Element Consistency: The target UI element should be the same. " \
+            # f"c. Contextual Similarity: The context in which the action is performed should be similar. " \
+            # "a. Searching for steps with the same UI operation as the given step. " \ "b. Confirming that the given
+            # steps and the searched steps belong to the same cluster (indicated by a cluster index) if they
+            # represent the same UI operation, and returning the cluster index of the searched steps to indicate that
+            # the given step belongs to that cluster. " \ "c. Retrieving all oracles from the clusters of the given
+            # step. " \ "d. Obtaining the oracles suitable for identifying bugs based on the GUI (given screenshot).
+            # " f"c. selecting relevant check items (oracles suitable for bug identification) based on context and
+            # the provided GUI. " "First, conduct an overall inspection of the GUI to ensure there are no obvious
+            # visual issues. " \ "Then, separately check each component to ensure its layout is reasonable." \
+            # "Third, check for bugs by analyzing the sequences of images and their corresponding operations." f"a.
+            # if the step is executed correctly given the step and the previous and next GUIs; " \ f"b. " \
+            # vector_store_name = f"{app} Step Cluster Knowledge Base"
+            # # filepath = Path(DATA_DIR, app, "cluster_steps_dicts_with_top_1.txt")
+            # filepath = Path(DATA_DIR, app, "cluster_steps_dicts_with_top_10.json")
             vector_store_name = f"{app} Test Scenario Knowledge Base"
             filepath = Path(DATA_DIR, app, "id_scenarios_dicts.json")
             assistant, vector_store = LLMUtil.create_assistant(assistant_name="Cluster Identifier",
@@ -85,6 +246,22 @@ class OracleFinder:
         if sub_step:
             operation = self.get_text_input_from_operation(sub_step)
             operation = json.dumps(operation)
+        # question = f"" \
+        #            f"The current step is as follows: {operation}\n" \
+        #            f"{Placeholder.STEP} refers to the intended step. " \
+        #            f"{Placeholder.ACTION}, {Placeholder.ELEMENT_NAME}, and others refer to the actual executed UI operation. " \
+        #            f"Please do chain-of-thoughts: \n" \
+        #            f"a. generate the concise {Placeholder.EXECUTED_STEP} by excluding any unexecuted parts " \
+        #            f"based on the actual UI step performed.\n" \
+        #            f"b. return the {Placeholder.CLUSTER_INDEX} of steps with the same UI operation " \
+        #            f"as the {Placeholder.EXECUTED_STEP} by searching the entire file. " \
+        #            f"This indicates that the {Placeholder.EXECUTED_STEP} and the identified steps " \
+        #            f"belong to the same cluster.\n" \
+        #            f"Note that a single {Placeholder.EXECUTED_STEP} can belong to multiple clusters, " \
+        #            f"but only return {Placeholder.CLUSTER_INDEXES} with high confidence.\n" \
+        #            f"Note that double-check the matching between the {Placeholder.CLUSTER_INDEXES} and " \
+        #            f"{Placeholder.REPRESENTATIVE_STEP}.\n" \
+        #            f"If no {Placeholder.CLUSTER_INDEXES} is identified, return None."
 
         question = f"{operation}\n"
 
@@ -142,9 +319,9 @@ class OracleFinder:
         citations = []
         for index, annotation in enumerate(annotations):
             message_content.value = message_content.value.replace(annotation.text, f"[{index}]")
-            if file_citation := getattr(annotation, "file_citation", None):
-                cited_file = LLMUtil.client.files.retrieve(file_citation.file_id)
-                citations.append(f"[{index}] {cited_file.save_filename}")
+            # if file_citation := getattr(annotation, "file_citation", None):
+            #     cited_file = LLMUtil.client.files.retrieve(file_citation.file_id)
+            #     citations.append(f"[{index}] {cited_file.save_filename}")
         finder_output = message_content.value
         return finder_output, total_cost
 
@@ -352,6 +529,36 @@ class Verifier:
             text_input = text_input + operation
             # print(text_input)
             text_input = json.dumps(text_input)
+        # chain_of_thoughts = "Please do chain-of-thoughts: " \
+        #                     f"a. verify whether the step has been correctly executed based on the GUI state. " \
+        #                     f"If it has not been correctly executed, further confirm using {Placeholder.ACTION}, " \
+        #                     f"{Placeholder.ELEMENT_NAME}, {Placeholder.ELEMENT_NUM}, etc., " \
+        #                     f"whether the incorrect execution is due to operation error " \
+        #                     f"(e.g., element misidentification, element mislocation), " \
+        #                     f"or a bug.\n" \
+        #                     "b. use creative thinking to identify any bugs based on the step and GUI, " \
+        #                     "referring to but not restrict to oracles.\n"
+        # # f"b. generate {Placeholder.CREATIVE_THINKING_ORACLES} " \
+        # # f"based on the provided {Placeholder.ORACLES} and the given GUI.\n" \
+        # text_input = text_input + "\n" + chain_of_thoughts
+        # json_format_request = f"Please do chains of thought reasoning for generating creative thinking oracles and identifying bugs. \n" \
+        #                       f"Please give the answer in a json format: {Placeholder.VERIFIER_OUTPUT_FORMAT}\n"
+        # # else:
+        # #     json_format_request = f"Please give me the answer in a json format: {Placeholder.VERIFIER_OUTPUT_FORMAT_WO_ORACLES}"
+        # # json_format_request = json_format_request
+        # text_input = text_input + json.dumps(json_format_request)
+        # notes = [
+        #     f"Note that if no bugs is identified, {Placeholder.BUGS} in the json format is None.",
+        #     "Please return the bugs that are actually observed, do not speculate.",
+        #     f"Note that the GUI is the state after executing the given step. ",
+        #     # "Note that there are oracles for you to identify any bugs, but please do not restrict to these oracles. "
+        #     # "Please use creative thinking to find any bugs based on GUI. ",
+        # ]
+        # if oracles:
+        #     text_input = text_input + "\n" + "Note that there are oracles for you to identify any bugs, " \
+        #                                      "but please do not restrict to these oracles. "
+        # for note in notes:
+        #     text_input = text_input + "\n" + note
         if text_input:
             text_input = json.dumps(text_input)
             text_input = LLMUtil.TEXT_INPUT.format(text_value=text_input)
@@ -492,3 +699,289 @@ class FormatVerifier:
 
         return answer, messages, cost
 
+# class StepVerifier:
+#     def __init__(self):
+#         pass
+#
+#     @staticmethod
+#     def convert_instances_into_qa_pairs(bugs):
+#         # @todo
+#         qa_pairs = []
+#         if Placeholder.SCENARIO_MODIFIER_INSTANCES:
+#             for instance_dict in Placeholder.SCENARIO_MODIFIER_INSTANCES:
+#                 # print(instance_dict['bug_id'])
+#                 bug = bugs.get_bug_by_id(int(instance_dict['bug_id']))
+#                 question = StepVerifier.question(bug)
+#                 answer = StepVerifier.answer(instance_dict['output'])
+#                 qa_pairs.append((question, answer))
+#         return qa_pairs
+#
+#     @staticmethod
+#     def get_session_prompt(with_original_gui=True):
+#         introduction = f"I am a verifier capable of: " \
+#                        f"a. if the step is executed correctly given the step and the previous and next GUIs; " \
+#                        f"b. identifying bugs given the steps and their corresponding GUIs. " \
+#                        "Note that there are check items for you to refer to, but please do not restrict to these items. " \
+#                        "Please use creative thinking to find any bugs. " \
+#                        "First, conduct an overall inspection of the GUI to ensure there are no obvious visual issues. " \
+#                        "Then, separately check each component to ensure its layout is reasonable." \
+#                        "Third, check for bugs by analyzing the sequences of images and their corresponding operations."
+#         # "The logical reasoning required to identify bugs involves: " \
+#         # "Static Bugs: Check each image for bugs and identify any that can be detected based on the specific GUI. " \
+#         # "Dynamic Bugs: Check for bugs by analyzing the sequences of images. " \
+#
+#         # introduction = ("I am a helpful element locator capable of identifying and providing the location of elements "
+#         #                 "within a GUI, which helps operating on elements in GUI based on specified steps.")
+#         # Convert the steps into the desired format
+#         # steps = [{f"{Placeholder.STEP_NUM}": i + 1, f"{Placeholder.STEP}": step} for i, step in enumerate(steps)]
+#         # test_scenarios = f"{Placeholder.SCENARIO}: {test_scenario_dict}\n"
+#         # steps = f"{Placeholder.STEPS}: {steps}\n"
+#         # question = "I have explored the above steps on the application. " \
+#         #            "Please detect bugs based on the steps and the corresponding screenshots I have explored. "
+#         # question = "Please detect bugs based on the steps and the corresponding screenshots. "
+#
+#         # notes = "Note that avoid repeating previously attempted ineffective operations. "
+#         json_format_request = f"Please give me the answer in a json format: {Placeholder.VERIFIER}"
+#
+#         session_prompt = (
+#                 introduction + "\n" +
+#                 # test_scenarios + "\n" +
+#                 # steps + "\n" +
+#                 # actions + "\n" +
+#                 # question + "\n" +
+#                 # notes + "\n" +
+#                 json_format_request
+#         )
+#         if with_original_gui:
+#             session_prompt = session_prompt + "\n" + \
+#                              "The screenshot includes the GUI and GUI with coordinate numbers. " \
+#                              "Please use the GUI for observation and " \
+#                              "the GUI with coordinate numbers for element location and description."
+#
+#         return session_prompt
+#
+#     @staticmethod
+#     def get_initial_messages(with_original_gui=True, with_instances=None):
+#         session_prompt = StepVerifier.get_session_prompt(with_original_gui)
+#         # print(session_prompt)
+#         qa_pairs = None
+#         if with_instances:
+#             qa_pairs = StepVerifier.convert_instances_into_qa_pairs(with_instances)
+#         messages = LLMUtil.get_messages(session_prompt, qa_pairs)
+#         return messages
+#
+#     @staticmethod
+#     def get_text_input_from_operation(operation, with_oracles=True):
+#         oracles = []
+#         if with_oracles:
+#             oracles = operation[Placeholder.ORACLES]
+#         text_input = {Placeholder.ACTION: operation[Placeholder.ACTION],
+#                       Placeholder.SCROLL_DIRECTION: operation[Placeholder.SCROLL_DIRECTION],
+#                       Placeholder.ELEMENT_NAME: operation[Placeholder.ELEMENT_NAME],
+#                       Placeholder.ELEMENT_NUM: operation[Placeholder.ELEMENT_NUM],
+#                       Placeholder.ELEMENT_INPUT: operation[Placeholder.ELEMENT_INPUT],
+#                       Placeholder.ORACLES: oracles,
+#                       }
+#         return text_input
+#
+#     @staticmethod
+#     def question(sub_step, with_original_gui=True, with_oracles=True, img_detail="high"):
+#         question = []
+#         # for screenshot_operation_dict in screenshot_operation_list:
+#         base64_image = None
+#         if with_original_gui:
+#             base64_image = ImageUtil.encode_image(sub_step[Placeholder.SCREENSHOT])
+#         base64_image_with_nums = ImageUtil.encode_image(sub_step[Placeholder.SCREENSHOT_WITH_NUMS])
+#         image_base64_list = [base64_image, base64_image_with_nums]
+#         for image_base64 in image_base64_list:
+#             if image_base64:
+#                 image_input = LLMUtil.IMAGE_BASE64_INPUT.format(base64_image=image_base64,
+#                                                                 img_detail=img_detail)
+#                 image_input = json.loads(image_input)
+#                 question.append(image_input)
+#         operation = sub_step[Placeholder.OPERATION]
+#         text_input = ""
+#         if operation:
+#             operation = StepVerifier.get_text_input_from_operation(operation, with_oracles)
+#             operation = json.dumps(operation)
+#             text_input = text_input + operation
+#             # print(text_input)
+#             text_input = json.dumps(text_input)
+#             if text_input:
+#                 text_input = LLMUtil.TEXT_INPUT.format(text_value=text_input)
+#                 # print(text_input)
+#                 # text_input = json.dumps(text_input)
+#                 text_input = json.loads(text_input)
+#                 # print(text_input)
+#                 question.append(text_input)
+#         question = json.dumps(question)
+#         return json.loads(question)
+#
+#     @staticmethod
+#     def answer(outputs):
+#         return json.loads(outputs)
+#
+#     @staticmethod
+#     def verify(sub_step, with_original_gui=True, with_oracles=True, with_instances=None, messages=None):
+#         if messages is None:
+#             messages = StepVerifier.get_initial_messages(with_original_gui, with_instances)
+#         # print(messages)
+#
+#         # extract summary
+#         question = StepVerifier.question(sub_step, with_original_gui, with_oracles)
+#         messages = LLMUtil.add_role_content_dict_into_messages(LLMUtil.ROLE_USER, question, messages)
+#         # print(self.summary_question)
+#         # input()
+#         answer = LLMUtil.ask_llm_for_chat_completions(messages)
+#         answer_dict = StepVerifier.answer(answer)
+#         messages = LLMUtil.add_role_content_dict_into_messages(LLMUtil.ROLE_ASSISTANT, answer_dict, messages)
+#
+#         # LLMUtil.show_messages(messages)
+#         # question = LLMUtil.get_question_without_image_encode(question)
+#         # print(question)
+#         # print(answer)
+#         # messages = LLMUtil.get_messages_without_image_encode(messages)
+#         return answer_dict, messages
+#
+#
+# class BugFinder:
+#     def __init__(self):
+#         pass
+#
+#     @staticmethod
+#     def convert_instances_into_qa_pairs(bugs):
+#         # @todo
+#         qa_pairs = []
+#         if Placeholder.SCENARIO_MODIFIER_INSTANCES:
+#             for instance_dict in Placeholder.SCENARIO_MODIFIER_INSTANCES:
+#                 # print(instance_dict['bug_id'])
+#                 bug = bugs.get_bug_by_id(int(instance_dict['bug_id']))
+#                 question = BugFinder.question(bug)
+#                 answer = BugFinder.answer(instance_dict['output'])
+#                 qa_pairs.append((question, answer))
+#         return qa_pairs
+#
+#     @staticmethod
+#     def get_session_prompt(with_original_gui=True):
+#         introduction = f"I am a bug finder capable of identifying bugs given the steps and their corresponding GUIs. " \
+#                        "Note that there are check items for you to refer to, but please do not restrict to these items. " \
+#                        "Please use creative thinking to find any bugs. " \
+#                        "First, conduct an overall inspection of the GUI to ensure there are no obvious visual issues. " \
+#                        "Then, separately check each component to ensure its layout is reasonable." \
+#                        "Third, check for bugs by analyzing the sequences of images and their corresponding operations."
+#         # "The logical reasoning required to identify bugs involves: " \
+#         # "Static Bugs: Check each image for bugs and identify any that can be detected based on the specific GUI. " \
+#         # "Dynamic Bugs: Check for bugs by analyzing the sequences of images. " \
+#
+#         # introduction = ("I am a helpful element locator capable of identifying and providing the location of elements "
+#         #                 "within a GUI, which helps operating on elements in GUI based on specified steps.")
+#         # Convert the steps into the desired format
+#         # steps = [{f"{Placeholder.STEP_NUM}": i + 1, f"{Placeholder.STEP}": step} for i, step in enumerate(steps)]
+#         # test_scenarios = f"{Placeholder.SCENARIO}: {test_scenario_dict}\n"
+#         # steps = f"{Placeholder.STEPS}: {steps}\n"
+#         # question = "I have explored the above steps on the application. " \
+#         #            "Please detect bugs based on the steps and the corresponding screenshots I have explored. "
+#         question = "Please detect bugs based on the steps and the corresponding screenshots. "
+#
+#         # notes = "Note that avoid repeating previously attempted ineffective operations. "
+#         json_format_request = f"Please give me the answer in a json format: {Placeholder.VERIFIER}"
+#
+#         session_prompt = (
+#                 introduction + "\n" +
+#                 # test_scenarios + "\n" +
+#                 # steps + "\n" +
+#                 # actions + "\n" +
+#                 question + "\n" +
+#                 # notes + "\n" +
+#                 json_format_request
+#         )
+#         if with_original_gui:
+#             session_prompt = session_prompt + "\n" + \
+#                              "The screenshot includes the GUI and GUI with coordinate numbers. " \
+#                              "Please use the GUI for observation and " \
+#                              "the GUI with coordinate numbers for element location and description."
+#
+#         return session_prompt
+#
+#     @staticmethod
+#     def get_initial_messages(with_original_gui=True, with_instances=None):
+#         session_prompt = BugFinder.get_session_prompt(with_original_gui)
+#         # print(session_prompt)
+#         qa_pairs = None
+#         if with_instances:
+#             qa_pairs = BugFinder.convert_instances_into_qa_pairs(with_instances)
+#         messages = LLMUtil.get_messages(session_prompt, qa_pairs)
+#         return messages
+#
+#     @staticmethod
+#     def get_text_input_from_operation(operation, with_oracles=True):
+#         oracles = []
+#         if with_oracles:
+#             oracles = operation[Placeholder.ORACLES]
+#         text_input = {Placeholder.ACTION: operation[Placeholder.ACTION],
+#                       Placeholder.SCROLL_DIRECTION: operation[Placeholder.SCROLL_DIRECTION],
+#                       Placeholder.ELEMENT_NAME: operation[Placeholder.ELEMENT_NAME],
+#                       Placeholder.ELEMENT_NUM: operation[Placeholder.ELEMENT_NUM],
+#                       Placeholder.ELEMENT_INPUT: operation[Placeholder.ELEMENT_INPUT],
+#                       Placeholder.ORACLES: oracles,
+#                       }
+#         return text_input
+#
+#     @staticmethod
+#     def question(sub_step, with_original_gui=True, with_oracles=True, img_detail="high"):
+#         question = []
+#         # for screenshot_operation_dict in screenshot_operation_list:
+#         base64_image = None
+#         if with_original_gui:
+#             base64_image = ImageUtil.encode_image(sub_step[Placeholder.SCREENSHOT])
+#         base64_image_with_nums = ImageUtil.encode_image(sub_step[Placeholder.SCREENSHOT_WITH_NUMS])
+#         image_base64_list = [base64_image, base64_image_with_nums]
+#         for image_base64 in image_base64_list:
+#             if image_base64:
+#                 image_input = LLMUtil.IMAGE_BASE64_INPUT.format(base64_image=image_base64,
+#                                                                 img_detail=img_detail)
+#                 image_input = json.loads(image_input)
+#                 question.append(image_input)
+#         operation = sub_step[Placeholder.OPERATION]
+#         text_input = ""
+#         if operation:
+#             operation = BugFinder.get_text_input_from_operation(operation, with_oracles)
+#             operation = json.dumps(operation)
+#             text_input = text_input + operation
+#             # print(text_input)
+#             text_input = json.dumps(text_input)
+#             if text_input:
+#                 text_input = LLMUtil.TEXT_INPUT.format(text_value=text_input)
+#                 # print(text_input)
+#                 # text_input = json.dumps(text_input)
+#                 text_input = json.loads(text_input)
+#                 # print(text_input)
+#                 question.append(text_input)
+#         question = json.dumps(question)
+#         return json.loads(question)
+#
+#     @staticmethod
+#     def answer(outputs):
+#         return json.loads(outputs)
+#
+#     @staticmethod
+#     def find_bug(sub_step, with_original_gui=True, with_oracles=True, with_instances=None, messages=None):
+#         if messages is None:
+#             messages = BugFinder.get_initial_messages(with_original_gui, with_instances)
+#         # print(messages)
+#
+#         # extract summary
+#         question = BugFinder.question(sub_step, with_original_gui, with_oracles)
+#         messages = LLMUtil.add_role_content_dict_into_messages(LLMUtil.ROLE_USER, question, messages)
+#         # print(self.summary_question)
+#         # input()
+#         answer = LLMUtil.ask_llm_for_chat_completions(messages)
+#         answer_dict = BugFinder.answer(answer)
+#         messages = LLMUtil.add_role_content_dict_into_messages(LLMUtil.ROLE_ASSISTANT, answer_dict, messages)
+#
+#         # LLMUtil.show_messages(messages)
+#         # question = LLMUtil.get_question_without_image_encode(question)
+#         # print(question)
+#         # print(answer)
+#         # messages = LLMUtil.get_messages_without_image_encode(messages)
+#         return answer_dict, messages

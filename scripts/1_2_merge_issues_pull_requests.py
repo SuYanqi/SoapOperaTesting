@@ -7,15 +7,21 @@ from config import DATA_DIR
 
 if __name__ == "__main__":
     github = "github"
-    reponame = 'WordPress-Android'
+    # reponame = 'WordPress-Android'
     # reponame = 'firefox-android'
     # reponame = 'fenix'
-    # reponame = 'NewPipe'
+    # reponame = 'AmazeFileManager'
+    # reponame = 'thunderbird'
+    # reponame = 'markor'
+    # reponame = 'newpipe'
+    reponame = 'MaterialFiles'
+    # reponame = 'duckduckgo'
     # AntennaPod
     # owner = 'AntennaPod'
     # reponame = 'AntennaPod'
     foldername = "issues_pulls"
     filepath = Path(DATA_DIR, reponame)
+    # filepath = Path('/data2', 'yanqisu', github, reponame)
     filenames = FileUtil.get_file_names_in_directory(Path(filepath, foldername), 'json')
     filenames = sorted(filenames, key=lambda x: (len(x), x))
     issues_pull_requests = []

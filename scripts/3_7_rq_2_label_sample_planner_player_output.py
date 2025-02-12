@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 from bug_automating.pipelines.placeholder import Placeholder
 from bug_automating.utils.file_util import FileUtil
-from config import DATA_DIR, APP_NAME_WORDPRESS, APP_NAME_FIREFOX, APP_NAME_ANTENNAPOD, OUTPUT_DIR
+from config import DATA_DIR, APP_NAME_WORDPRESS, APP_NAME_FIREFOX, APP_NAME_ANTENNAPOD, APP_NAME_AMAZE, OUTPUT_DIR
 
 import random
 
@@ -32,8 +32,8 @@ if __name__ == "__main__":
     # app = APP_NAME_FIREFOX
     # app = APP_NAME_ANTENNAPOD
     # app = APP_NAME_WORDPRESS
-    apps = [APP_NAME_FIREFOX, APP_NAME_ANTENNAPOD, APP_NAME_WORDPRESS]
-    sample_size = 100
+    apps = [APP_NAME_FIREFOX, APP_NAME_ANTENNAPOD, APP_NAME_WORDPRESS, APP_NAME_AMAZE]
+    sample_size = 203
     foldername = 'all'
 
     save_filename = f"sample_outputs_{foldername}_{sample_size}_with_mark"

@@ -9,12 +9,13 @@ from bug_automating.pipelines.verifier import Verifier
 from bug_automating.utils.file_util import FileUtil
 from bug_automating.utils.img_util import ImageUtil
 from bug_automating.utils.llm_util import LLMUtil
-from config import DATA_DIR, APP_NAME_WORDPRESS, APP_NAME_FIREFOX, APP_NAME_ANTENNAPOD, OUTPUT_DIR
+from config import DATA_DIR, APP_NAME_WORDPRESS, APP_NAME_FIREFOX, APP_NAME_ANTENNAPOD, OUTPUT_DIR, APP_NAME_AMAZE
 
 if __name__ == "__main__":
-    app = APP_NAME_FIREFOX
+    # app = APP_NAME_FIREFOX
     # app = APP_NAME_ANTENNAPOD
     # app = APP_NAME_WORDPRESS
+    app = APP_NAME_AMAZE
 
     verifier_model = LLMUtil.GPT4O_MODEL_NAME_WITH_DATE_08
     verifier_temperature = 1
@@ -45,7 +46,8 @@ if __name__ == "__main__":
         # print(app_directory)
         print(output_result[Placeholder.APP_DIR])
         app_directory = output_result[Placeholder.APP_DIR].replace(str(OUTPUT_DIR), "")
-        app_directory = app_directory.replace("/", "")
+        print(app_directory)
+        app_directory = app_directory.replace(f"/{app}/all/", "")
         print(app_directory)
         original_directory = str(Path(filepath, app_directory))
         print(original_directory)

@@ -16,9 +16,13 @@ if __name__ == "__main__":
     # app_keyword = APP_NAME_ANTENNAPOD
     app_keyword = APP_NAME_WORDPRESS
 
-    # planner without KB and without oracles
-    with_planner_knowledge_base = False
+    # planner with KB and with oracles
+    with_planner_knowledge_base = True
     with_oracles = True
+
+    # # planner without KB and without oracles
+    # with_planner_knowledge_base = False
+    # with_oracles = False
 
     # planner with KB and without oracles
     # with_planner_knowledge_base = True

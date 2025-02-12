@@ -299,10 +299,15 @@ The Planner generates an actionable plan to open the 'Recently Closed Tabs' page
 
 ### **Bugs Identified in: Others**
 
-| No. | Bug ID |
-|----------|----------|
-| 1 | https://bugzilla.mozilla.org/show_bug.cgi?id=1912698 |
-| 2 | https://bugzilla.mozilla.org/show_bug.cgi?id=1912708 |
-| 3 | https://bugzilla.mozilla.org/show_bug.cgi?id=1912703 |
-| 4 | https://bugzilla.mozilla.org/show_bug.cgi?id=1912704 |
-| 5 | https://bugzilla.mozilla.org/show_bug.cgi?id=1912705 |
+| No. | Bug ID                                                          |
+|-----|-----------------------------------------------------------------|
+| 1   | https://bugzilla.mozilla.org/show_bug.cgi?id=1912698            |
+| 2   | https://bugzilla.mozilla.org/show_bug.cgi?id=1912708            |
+| 3   | https://bugzilla.mozilla.org/show_bug.cgi?id=1912703            |
+| 4   | https://bugzilla.mozilla.org/show_bug.cgi?id=1912704            |
+| 5   | https://bugzilla.mozilla.org/show_bug.cgi?id=1912705            |
+| 6   | https://github.com/duckduckgo/Android/issues/5636               |
+| 7   | https://github.com/duckduckgo/Android/issues/5637               |
+| 8   | https://github.com/thunderbird/thunderbird-android/issues/8783  |
+| 9   | https://github.com/thunderbird/thunderbird-android/issues/8784  |
+| 10  | https://github.com/thunderbird/thunderbird-android/issues/8785  |

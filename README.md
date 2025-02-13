@@ -1,8 +1,7 @@
 **Dataset:** https://drive.google.com/drive/folders/11GY5JZ4F_h40qsO_PdEAnNisnI-RtSd0?usp=sharing
 1. Soap opera tests used for the formative study and automated soap opera testing.
 2. Bug reports for Firefox used to construct the scenario knowledge graph.
-3. Issues and pull requests for WordPress used to construct the scenario knowledge graph.
-4. Issues and pull requests for AntennaPod used to construct the scenario knowledge graph.
+3. Issues and pull requests for Others used to construct the scenario knowledge graph.
 
 **Code:**
 1. Use scripts/0_0 to 0_3 to crawl bug reports from Mozilla Bugzilla.

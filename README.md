@@ -310,3 +310,4 @@ The Planner generates an actionable plan to open the 'Recently Closed Tabs' page
 | 8   | https://github.com/thunderbird/thunderbird-android/issues/8783  |
 | 9   | https://github.com/thunderbird/thunderbird-android/issues/8784  |
 | 10  | https://github.com/thunderbird/thunderbird-android/issues/8785  |
+| 11  | https://issuetracker.google.com/issues/400119366                |
